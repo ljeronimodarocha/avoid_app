@@ -65,7 +65,7 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'User Name',
+                    labelText: 'Usuário',
                   ),
                   keyboardType: TextInputType.emailAddress,
                   onSaved: (value) => _authData['username'] = value!,

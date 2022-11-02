@@ -1,5 +1,7 @@
 import 'package:avoid_app/providers/auth_provider.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -9,71 +11,53 @@ class VideoStraming extends StatefulWidget {
 }
 
 class _VideoStramingState extends State<VideoStraming> {
-  VideoPlayerController? _controller;
+  FlickManager? flickManaFger;
   String? dateTimeString;
+  String? token;
 
   @override
   void initState() {
     super.initState();
-    String token =
-        Provider.of<AuthProvider>(context, listen: false).token.toString();
+    token = Provider.of<AuthProvider>(context, listen: false).token.toString();
 
-    _controller = VideoPlayerController.network(
-        'http://192.168.15.9:3000/filme/video/33',
-        httpHeaders: <String, String>{'Authorization': token})
-      ..initialize().then((_) {
-        setState(() {});
-      });
-
-    _controller!.play();
+    //_controller!.play();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller?.dispose();
+    flickManaFger?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final idFilme = ModalRoute.of(context)?.settings.arguments;
+    flickManaFger = FlickManager(
+        videoPlayerController: VideoPlayerController.network(
+            'http://192.168.15.9:3000/filme/video/${idFilme}',
+            httpHeaders: <String, String>{'Authorization': token!}));
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vídeos'),
         centerTitle: true,
       ),
-      body: _controller!.value.isInitialized
-          ? Container(
-              padding: const EdgeInsets.all(20),
-              child: AspectRatio(
-                aspectRatio: _controller!.value.aspectRatio,
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    VideoPlayer(_controller!),
-                    _ControlsOverlay(controller: _controller!),
-                    VideoProgressIndicator(
-                      _controller!,
-                      allowScrubbing: true,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          : AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                color: Colors.black,
-                width: double.maxFinite,
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.red,
-                    ),
-                    strokeWidth: 2,
-                  ),
-                ),
-              ),
-            ),
+      body: Stack(
+        children: [
+          FlickVideoPlayer(
+            flickManager: flickManaFger!,
+            preferredDeviceOrientationFullscreen: const [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.landscapeLeft,
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.portraitDown,
+            ],
+            flickVideoWithControlsFullscreen: const FlickVideoWithControls(),
+          ),
+          _ControlsOverlay(
+              controller:
+                  flickManaFger!.flickVideoManager!.videoPlayerController!),
+        ],
+      ),
     );
   }
 }
@@ -98,59 +82,32 @@ class _ControlsOverlayState extends State<_ControlsOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 10),
-          reverseDuration: const Duration(milliseconds: 10),
-          child: widget.controller.value.isPlaying
-              ? const SizedBox.shrink()
-              : Container(
-                  color: Colors.black26,
-                  child: const Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 100.0,
-                      semanticLabel: 'Play',
-                    ),
-                  ),
-                ),
-        ),
-        GestureDetector(
-          onTap: () {
-            widget.controller.value.isPlaying
-                ? widget.controller.pause()
-                : widget.controller.play();
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10, right: 10),
+        child: PopupMenuButton<double>(
+          initialValue: widget.controller.value.playbackSpeed,
+          tooltip: 'Playback speed',
+          onSelected: (double speed) {
+            widget.controller.setPlaybackSpeed(speed);
             setState(() {});
           },
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: SizedBox(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(color: Colors.red),
-              child: PopupMenuButton<double>(
-                initialValue: widget.controller.value.playbackSpeed,
-                tooltip: 'Playback speed',
-                onSelected: (double speed) {
-                  widget.controller.setPlaybackSpeed(speed);
-                },
-                itemBuilder: (BuildContext context) {
-                  return <PopupMenuItem<double>>[
-                    for (final double speed in _examplePlaybackRates)
-                      PopupMenuItem<double>(
-                        value: speed,
-                        child: Text('${speed}x'),
-                      )
-                  ];
-                },
-                child: Text('${widget.controller.value.playbackSpeed}x'),
-              ),
-            ),
+          itemBuilder: (BuildContext context) {
+            return <PopupMenuItem<double>>[
+              for (final double speed in _examplePlaybackRates)
+                PopupMenuItem<double>(
+                  value: speed,
+                  child: Text('${speed}x'),
+                )
+            ];
+          },
+          child: const Icon(
+            Icons.settings,
+            color: Colors.grey,
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:avoid_app/providers/auth_provider.dart';
 import 'package:avoid_app/providers/video_provider.dart';
 import 'package:avoid_app/utils/app_route.dart';
+import 'package:avoid_app/views/add_video.dart';
 import 'package:avoid_app/views/auth_home.dart';
 import 'package:avoid_app/views/auth_screen.dart';
 import 'package:avoid_app/views/video_streaming.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoute.VIDEO: (ctx) => VideoStraming(),
           AppRoute.AUTH: (ctx) => AuthScreen(),
+          AppRoute.ADD_VIDEO: (ctx) => AddVideo(),
         },
       ),
     );
