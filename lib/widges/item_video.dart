@@ -2,10 +2,12 @@ import 'package:avoid_app/model/video_model.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_route.dart';
+import 'menu_opcoes.dart';
 
 class ItemVideo extends StatelessWidget {
   final VideoModel item;
-  const ItemVideo(this.item);
+  final bool habilitarMenuOpcoes;
+  const ItemVideo(this.item, this.habilitarMenuOpcoes, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,9 @@ class ItemVideo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(item.nome),
-              Text(item.uri),
+              const Spacer(),
+              Text(item.categoria),
+              if (habilitarMenuOpcoes) MenuOpcoes(item.id),
             ],
           ),
         ),

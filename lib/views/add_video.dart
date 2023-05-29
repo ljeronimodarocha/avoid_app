@@ -3,6 +3,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../size_config.dart';
+
 class AddVideo extends StatefulWidget {
   const AddVideo({super.key});
 
@@ -69,74 +71,80 @@ class _AddVideoState extends State<AddVideo> {
           ? Container(
               alignment: Alignment.center,
               child: const CircularProgressIndicator())
-          : Form(
-              key: _form,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Nome',
-                      ),
-                      keyboardType: TextInputType.text,
-                      onSaved: (value) => _videoData['nome'] = value!,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Informe um nome válido";
-                        }
-                        return null;
-                      },
-                    ),
-                    DropdownButton(
-                        value: _videoData['categoriaFilmes'],
-                        items: list.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            _videoData['categoriaFilmes'] = value!;
-                          });
-                        }),
-                    TextButton(
-                      child: const Text("Selecionar arquivo"),
-                      onPressed: () async {
-                        var result = await FilePicker.platform.pickFiles(
-                          withReadStream: true,
-                          allowMultiple: false,
-                          type: FileType.video,
-                        );
-
-                        if (result != null) {
-                          setState(() {
-                            objFile = result.files.single;
-                          });
-                        }
-                      },
-                    ),
-                    if (objFile != null)
-                      Text("Nome do arquivo : ${objFile!.name}"),
-                    if (objFile != null)
-                      Text("Tamanho do arquivo : ${objFile!.size} bytes"),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.grey),
-                      ),
-                      onPressed: _submit,
-                      child: const Text(
-                        'Enviar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+          : Center(
+              child: SizedBox(
+                width: getProportionateScreenWidth(200),
+                child: Form(
+                  key: _form,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Nome',
+                          ),
+                          keyboardType: TextInputType.text,
+                          onSaved: (value) => _videoData['nome'] = value!,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Informe um nome válido";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        DropdownButton(
+                            value: _videoData['categoriaFilmes'],
+                            items: list.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _videoData['categoriaFilmes'] = value!;
+                              });
+                            }),
+                        TextButton(
+                          child: const Text("Selecionar arquivo"),
+                          onPressed: () async {
+                            var result = await FilePicker.platform.pickFiles(
+                              withReadStream: true,
+                              allowMultiple: false,
+                              type: FileType.video,
+                            );
+
+                            if (result != null) {
+                              setState(() {
+                                objFile = result.files.single;
+                              });
+                            }
+                          },
+                        ),
+                        if (objFile != null)
+                          Text("Nome do arquivo : ${objFile!.name}"),
+                        if (objFile != null)
+                          Text("Tamanho do arquivo : ${objFile!.size} bytes"),
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey),
+                          ),
+                          onPressed: _submit,
+                          child: const Text(
+                            'Enviar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

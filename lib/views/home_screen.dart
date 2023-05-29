@@ -1,12 +1,15 @@
-import 'package:avoid_app/model/video_model.dart';
 import 'package:avoid_app/providers/video_provider.dart';
 import 'package:avoid_app/utils/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widges/drawer_app.dart';
 import '../widges/item_video.dart';
 
 class HomeScreen extends StatefulWidget {
+  final bool habilitarMenuOpcoes;
+
+  const HomeScreen(this.habilitarMenuOpcoes, {super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -51,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListView.builder(
                           itemCount: videos.videoCount,
                           itemBuilder: (ctx, index) =>
-                              ItemVideo(videos.items[index]),
+                              ItemVideo(videos.items[index], true),
                         ),
                       );
                     },
@@ -63,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
         onPressed: () => Navigator.of(context).pushNamed(AppRoute.ADD_VIDEO),
       ),
+      drawer: DrawerApp(),
     );
   }
 }

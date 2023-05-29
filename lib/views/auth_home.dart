@@ -4,9 +4,12 @@ import 'package:avoid_app/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../size_config.dart';
+
 class AuthOrHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     AuthProvider auth = Provider.of<AuthProvider>(context);
     return FutureBuilder(
         future: auth.tryAutoLogin(),
@@ -20,7 +23,11 @@ class AuthOrHome extends StatelessWidget {
               child: Text('Ocorreu um erro!'),
             );
           } else {
-            return auth.isAuth ? HomeScreen() : AuthScreen();
+            return auth.isAuth
+                ? const HomeScreen(
+                    true,
+                  )
+                : AuthScreen();
           }
         });
   }

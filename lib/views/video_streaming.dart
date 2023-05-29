@@ -33,9 +33,11 @@ class _VideoStramingState extends State<VideoStraming> {
   Widget build(BuildContext context) {
     final idFilme = ModalRoute.of(context)?.settings.arguments;
     flickManaFger = FlickManager(
-        videoPlayerController: VideoPlayerController.network(
-            'http://192.168.15.9:3000/filme/video/${idFilme}',
-            httpHeaders: <String, String>{'Authorization': token!}));
+      videoPlayerController: VideoPlayerController.network(
+        'http://192.168.15.42:3000/filme/video/${idFilme}',
+        httpHeaders: <String, String>{'Cookie': token!},
+      )..initialize(),
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vídeos'),

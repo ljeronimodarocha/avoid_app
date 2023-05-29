@@ -1,11 +1,13 @@
 import 'dart:async' show Future, Timer;
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../data/store.dart';
 import '../exceptions/firebase_exception.dart';
+import '../utils/Constant.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _userID;
@@ -32,7 +34,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _authenticate(
       String username, password, String urlSegment) async {
-    final String _url = "http://192.168.15.9:3000/$urlSegment";
+    final String _url = '${Constant.urlDefaultApi}$urlSegment';
 
     final response = await http
         .post(
@@ -48,21 +50,24 @@ class AuthProvider with ChangeNotifier {
     if (respondeBody["error"] != null) {
       throw FireBaseException(respondeBody["error"]['message']);
     } else {
-      _token = respondeBody["token"];
-      _userID = respondeBody["userID"].toString();
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(respondeBody["expIn"].toString()),
-        ),
-      );
+      if (urlSegment.contains("signin")) {
+        if (!kIsWeb) {
+          List<String> headerCookie =
+              response.headers["set-cookie"]!.split(";");
+          _token = headerCookie[0];
+          _userID = respondeBody["id"].toString();
+          _expiryDate = DateTime.now().add(
+            Duration(seconds: int.parse(headerCookie[2].split("=")[1])),
+          );
 
-      Store.saveMap('userData', {
-        "token": _token,
-        "userID": _userID,
-        "expiryDate": _expiryDate!.toIso8601String(),
-      });
-
-      _autoLogout();
+          Store.saveMap('userData', {
+            "token": _token,
+            "userID": _userID,
+            "expiryDate": _expiryDate!.toIso8601String(),
+          });
+          _autoLogout();
+        }
+      } else {}
       notifyListeners();
     }
 
@@ -74,7 +79,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> entrar(String email, String password) async {
-    return _authenticate(email, password, "login");
+    return _authenticate(email, password, "auth/signin");
   }
 
   Future<void> tryAutoLogin() async {
@@ -102,12 +107,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   void logout() {
-    _token = null as String;
-    _userID = null as String;
-    _expiryDate = null as DateTime;
+    _token = null;
+    _userID = null;
+    _expiryDate = null;
     if (_logoutTimer != null) {
-      _logoutTimer!.cancel();
-      _logoutTimer = null as Timer;
+      _logoutTimer?.cancel();
+      _logoutTimer = null;
     }
     Store.remove('userData');
     notifyListeners();

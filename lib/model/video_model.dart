@@ -1,7 +1,7 @@
 class VideoModel {
-  String id;
+  int id;
   String nome;
-  String uri;
+  String categoria;
 
-  VideoModel(this.id, this.nome, this.uri);
+  VideoModel(this.id, this.nome, this.categoria);
 }

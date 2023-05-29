@@ -5,6 +5,7 @@ import 'package:avoid_app/views/add_video.dart';
 import 'package:avoid_app/views/auth_home.dart';
 import 'package:avoid_app/views/auth_screen.dart';
 import 'package:avoid_app/views/video_streaming.dart';
+import 'package:avoid_app/views/videos_compartilhados.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoute.VIDEO: (ctx) => VideoStraming(),
           AppRoute.AUTH: (ctx) => AuthScreen(),
-          AppRoute.ADD_VIDEO: (ctx) => AddVideo(),
+          AppRoute.ADD_VIDEO: (ctx) => const AddVideo(),
+          AppRoute.VIDEO_SHARED: (ctx) => const VideosCompartilhadosComigo(),
         },
       ),
     );
