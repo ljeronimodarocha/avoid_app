@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,10 +38,18 @@ class VideosCompartilhadosComigo extends StatelessWidget {
 
                     return Future.value();
                   },
-                  child: ListView.builder(
-                    itemCount: videos.videoSharedCount,
-                    itemBuilder: (ctx, index) =>
-                        ItemVideo(videos.sharedItens[index], false),
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                      dragDevices: {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse,
+                      },
+                    ),
+                    child: ListView.builder(
+                      itemCount: videos.videoSharedCount,
+                      itemBuilder: (ctx, index) =>
+                          ItemVideo(videos.sharedItens[index], false),
+                    ),
                   ),
                 );
               },

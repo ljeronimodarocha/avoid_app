@@ -40,6 +40,7 @@ class VideoProvider with ChangeNotifier {
         respondeBody["title"] == "Unauthorized") {
       throw Exception(respondeBody["details"]);
     }
+    notifyListeners();
     return Future.value();
   }
 
@@ -61,6 +62,7 @@ class VideoProvider with ChangeNotifier {
       });
     }
     _sharedItems = sharedItens.reversed.toList();
+    notifyListeners();
     return Future.value();
   }
 
@@ -82,6 +84,7 @@ class VideoProvider with ChangeNotifier {
       });
     }
     _items = loadeditems.reversed.toList();
+    notifyListeners();
     return Future.value();
   }
 
@@ -135,6 +138,7 @@ class VideoProvider with ChangeNotifier {
         );
       }
     }
+    notifyListeners();
     return Future.value();
   }
 
@@ -147,6 +151,19 @@ class VideoProvider with ChangeNotifier {
       throw Exception("Acesso não permitido");
     }
     List<String> data = List<String>.from(jsonDecode(response.body)['emails']);
+    notifyListeners();
     return Future.value(data);
+  }
+
+  Future<void> excluirFilme(int id) async {
+    final response = await http.delete(Uri.parse('$_url/$id'), headers: {
+      'Cookie': _token!,
+      'Authorization': _token!,
+    }).timeout(const Duration(seconds: 15));
+    if (response.statusCode != 204) {
+      //throw Exception("Acesso não permitido");
+    }
+    loadFilmes();
+    return Future.value();
   }
 }

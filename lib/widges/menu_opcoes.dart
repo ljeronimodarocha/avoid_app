@@ -12,7 +12,7 @@ class MenuOpcoes extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = ListTextEditingController(',');
 
-    void _showErrorDialog(String msg) {
+    void showErrorDialog(String msg) {
       showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -26,6 +26,77 @@ class MenuOpcoes extends StatelessWidget {
                       child: const Text('Fechar'))
                 ],
               ));
+    }
+
+    void dialogCompartilhamento(
+      ListTextEditingController controller,
+    ) {
+      showDialog(
+        context: context,
+        builder: (_) => Dialog(
+          elevation: 5,
+          child: SizedBox(
+            width: getProportionateScreenWidth(150),
+            height: getProportionateScreenHeight(200),
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: getProportionateScreenWidth(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.only(left: getProportionateScreenWidth(2)),
+                    child: const Text('Email addresses'),
+                  ),
+                  ListTextField(
+                    controller: controller,
+                    itemBuilder: (_, value) {
+                      return Chip(
+                        label: Text(value),
+                        onDeleted: () => controller.removeItem(value),
+                      );
+                    },
+                    itemSpacing: 8,
+                    itemLineSpacing: 4,
+                    validator: (value) {
+                      final emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(value);
+                      if (emailValid) {
+                        controller.addItem(value);
+                        return null;
+                      } else {
+                        return 'Enter a valid email address';
+                      }
+                    },
+                    decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide())),
+                  ),
+                  const Spacer(),
+                  Center(
+                    child: TextButton(
+                      onPressed: () async {
+                        try {
+                          await Provider.of<VideoProvider>(context,
+                                  listen: false)
+                              .compartilharFilme(idFilme, controller.items);
+                        } catch (error) {
+                          showErrorDialog(error.toString());
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Salvar'),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     return Container(
@@ -51,78 +122,15 @@ class MenuOpcoes extends StatelessWidget {
             ),
           ),
         ],
-        onSelected: (value) {
+        onSelected: (value) async {
           if (value == ItensOpcoes.compartilhar) {
-            Provider.of<VideoProvider>(context, listen: false)
+            await Provider.of<VideoProvider>(context, listen: false)
                 .listarUsuariosQueFilmeFoiCompartilhado(idFilme)
                 .then((value) => controller.addAllItems(value));
-            showDialog(
-              context: context,
-              builder: (_) => Dialog(
-                elevation: 5,
-                child: SizedBox(
-                  width: getProportionateScreenWidth(150),
-                  height: getProportionateScreenHeight(200),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: getProportionateScreenWidth(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: getProportionateScreenWidth(2)),
-                          child: const Text('Email addresses'),
-                        ),
-                        ListTextField(
-                          controller: controller,
-                          itemBuilder: (_, value) {
-                            return Chip(
-                              label: Text(value),
-                              onDeleted: () => controller.removeItem(value),
-                            );
-                          },
-                          itemSpacing: 8,
-                          itemLineSpacing: 4,
-                          validator: (value) {
-                            final emailValid = RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(value);
-                            if (emailValid) {
-                              controller.addItem(value);
-                              return null;
-                            } else {
-                              return 'Enter a valid email address';
-                            }
-                          },
-                          decoration: const BoxDecoration(
-                              border: Border(bottom: BorderSide())),
-                        ),
-                        const Spacer(),
-                        Center(
-                          child: TextButton(
-                            onPressed: () async {
-                              try {
-                                await Provider.of<VideoProvider>(context,
-                                        listen: false)
-                                    .compartilharFilme(
-                                        idFilme, controller.items);
-                              } catch (error) {
-                                _showErrorDialog(error.toString());
-                              }
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Salvar'),
-                          ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+            dialogCompartilhamento(controller);
+          } else if (value == ItensOpcoes.excluir) {
+            await Provider.of<VideoProvider>(context, listen: false)
+                .excluirFilme(idFilme);
           }
         },
       ),

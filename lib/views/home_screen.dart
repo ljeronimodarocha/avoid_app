@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:avoid_app/providers/video_provider.dart';
 import 'package:avoid_app/utils/app_route.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +53,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                           return Future.value();
                         },
-                        child: ListView.builder(
-                          itemCount: videos.videoCount,
-                          itemBuilder: (ctx, index) =>
-                              ItemVideo(videos.items[index], true),
+                        child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(
+                            dragDevices: {
+                              PointerDeviceKind.touch,
+                              PointerDeviceKind.mouse,
+                            },
+                          ),
+                          child: ListView.builder(
+                            itemCount: videos.videoCount,
+                            itemBuilder: (ctx, index) =>
+                                ItemVideo(videos.items[index], true),
+                          ),
                         ),
                       );
                     },
