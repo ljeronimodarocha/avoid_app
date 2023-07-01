@@ -9,9 +9,10 @@ import '../exceptions/firebase_exception.dart';
 import '../utils/Constant.dart';
 
 class VideoProvider with ChangeNotifier {
-  String? _token;
+  final String? _token;
   List<VideoModel>? _items = [];
   List<VideoModel>? _sharedItems = [];
+  List<String>? _usuariosFilmeCompartilhados;
 
   VideoProvider([this._token, this._items]);
 
@@ -19,12 +20,14 @@ class VideoProvider with ChangeNotifier {
 
   List<VideoModel> get items => [...?_items];
   List<VideoModel> get sharedItens => [...?_sharedItems];
+  List<String> get usuariosFilmeCompartilhados =>
+      [...?_usuariosFilmeCompartilhados];
 
   Future<void> compartilharFilme(int idFilme, List<String> emails) async {
     final response = await http
         .post(Uri.parse('$_url/share'),
             headers: <String, String>{
-              'Authorization': _token!,
+              'Cookie': _token!,
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
@@ -34,13 +37,18 @@ class VideoProvider with ChangeNotifier {
         .timeout(
           const Duration(seconds: 5),
         );
-    final respondeBody = jsonDecode(response.body);
 
-    if (respondeBody["title"] != null &&
-        respondeBody["title"] == "Unauthorized") {
-      throw Exception(respondeBody["details"]);
+    if (response.statusCode != 204) {
+      final respondeBody = jsonDecode(response.body);
+
+      if (respondeBody["title"] != null &&
+          respondeBody["title"] == "Unauthorized") {
+        throw Exception(respondeBody["details"]);
+      } else {
+        throw Exception(respondeBody["message"]);
+      }
     }
-    notifyListeners();
+
     return Future.value();
   }
 
@@ -48,18 +56,15 @@ class VideoProvider with ChangeNotifier {
     List<VideoModel> sharedItens = [];
     final response = await http.get(Uri.parse('$_url/share'), headers: {
       'Cookie': _token!,
-      'Authorization': _token!,
     }).timeout(const Duration(seconds: 15));
     if (response.statusCode == 403) {
       throw Exception("Efetue o login novamente!");
     }
     List data = jsonDecode(response.body);
     sharedItens.clear();
-    if (data != null) {
-      data.forEach((element) {
-        sharedItens.add(VideoModel(
-            element['id'], element['nome'], element['categoriaFilmes']));
-      });
+    for (var element in data) {
+      sharedItens.add(VideoModel(
+          element['id'], element['nome'], element['categoriaFilmes']));
     }
     _sharedItems = sharedItens.reversed.toList();
     notifyListeners();
@@ -70,18 +75,15 @@ class VideoProvider with ChangeNotifier {
     List<VideoModel> loadeditems = [];
     final response = await http.get(Uri.parse(_url), headers: {
       'Cookie': _token!,
-      'Authorization': _token!,
     }).timeout(const Duration(seconds: 15));
     if (response.statusCode == 403) {
       throw Exception("Efetue o login novamente!");
     }
     List data = jsonDecode(response.body);
     loadeditems.clear();
-    if (data != null) {
-      data.forEach((element) {
-        loadeditems.add(VideoModel(
-            element['id'], element['nome'], element['categoriaFilmes']));
-      });
+    for (var element in data) {
+      loadeditems.add(VideoModel(
+          element['id'], element['nome'], element['categoriaFilmes']));
     }
     _items = loadeditems.reversed.toList();
     notifyListeners();
@@ -101,7 +103,7 @@ class VideoProvider with ChangeNotifier {
     final response = await http
         .post(Uri.parse(_url),
             headers: <String, String>{
-              'Authorization': _token!,
+              'Cookie': _token!,
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
@@ -123,16 +125,16 @@ class VideoProvider with ChangeNotifier {
           http.MultipartRequest("POST", Uri.parse('${_url}/${id}/file'));
       request.headers.addAll(
         <String, String>{
-          'Authorization': _token!,
+          'Cookie': _token!,
         },
       );
       request.files.add(await http.MultipartFile.fromPath("file", file.path!));
-      final response2 = await request.send();
-      if (response2.statusCode != 200) {
+      final responseEnviarArquivo = await request.send();
+      if (responseEnviarArquivo.statusCode != 200) {
         await http.delete(
           Uri.parse('${_url}/${id}'),
           headers: <String, String>{
-            'Authorization': _token!,
+            'Cookie': _token!,
             'Content-Type': 'application/json',
           },
         );
@@ -142,23 +144,22 @@ class VideoProvider with ChangeNotifier {
     return Future.value();
   }
 
-  Future<List<String>> listarUsuariosQueFilmeFoiCompartilhado(int id) async {
+  Future<void> listarUsuariosQueFilmeFoiCompartilhado(int id) async {
     final response = await http.get(Uri.parse('$_url/share/$id'), headers: {
       'Cookie': _token!,
-      'Authorization': _token!,
     }).timeout(const Duration(seconds: 15));
     if (response.statusCode == 403) {
       throw Exception("Acesso não permitido");
     }
     List<String> data = List<String>.from(jsonDecode(response.body)['emails']);
+    _usuariosFilmeCompartilhados = data;
     notifyListeners();
-    return Future.value(data);
+    return Future.value();
   }
 
   Future<void> excluirFilme(int id) async {
     final response = await http.delete(Uri.parse('$_url/$id'), headers: {
       'Cookie': _token!,
-      'Authorization': _token!,
     }).timeout(const Duration(seconds: 15));
     if (response.statusCode != 204) {
       //throw Exception("Acesso não permitido");

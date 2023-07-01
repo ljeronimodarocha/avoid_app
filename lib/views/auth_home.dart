@@ -1,5 +1,4 @@
 import 'package:avoid_app/providers/auth_provider.dart';
-import 'package:avoid_app/views/auth_screen.dart';
 import 'package:avoid_app/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../size_config.dart';
 
 class AuthOrHome extends StatelessWidget {
+  const AuthOrHome({super.key});
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -23,11 +24,9 @@ class AuthOrHome extends StatelessWidget {
               child: Text('Ocorreu um erro!'),
             );
           } else {
-            return auth.isAuth
-                ? const HomeScreen(
-                    true,
-                  )
-                : AuthScreen();
+            return const HomeScreen(
+              true,
+            );
           }
         });
   }

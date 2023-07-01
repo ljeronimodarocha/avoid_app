@@ -10,7 +10,9 @@ class MenuOpcoes extends StatelessWidget {
   const MenuOpcoes(this.idFilme);
   @override
   Widget build(BuildContext context) {
-    final controller = ListTextEditingController(',');
+    final controller = ListTextEditingController(
+      ',',
+    );
 
     void showErrorDialog(String msg) {
       showDialog(
@@ -82,10 +84,10 @@ class MenuOpcoes extends StatelessWidget {
                           await Provider.of<VideoProvider>(context,
                                   listen: false)
                               .compartilharFilme(idFilme, controller.items);
+                          Navigator.of(context).pop();
                         } catch (error) {
                           showErrorDialog(error.toString());
                         }
-                        Navigator.of(context).pop();
                       },
                       child: const Text('Salvar'),
                     ),
@@ -125,8 +127,11 @@ class MenuOpcoes extends StatelessWidget {
         onSelected: (value) async {
           if (value == ItensOpcoes.compartilhar) {
             await Provider.of<VideoProvider>(context, listen: false)
-                .listarUsuariosQueFilmeFoiCompartilhado(idFilme)
-                .then((value) => controller.addAllItems(value));
+                .listarUsuariosQueFilmeFoiCompartilhado(idFilme);
+            List<String> usuariosFilmeCompartilhados =
+                Provider.of<VideoProvider>(context, listen: false)
+                    .usuariosFilmeCompartilhados;
+            controller.addAllItems(usuariosFilmeCompartilhados);
             dialogCompartilhamento(controller);
           } else if (value == ItensOpcoes.excluir) {
             await Provider.of<VideoProvider>(context, listen: false)

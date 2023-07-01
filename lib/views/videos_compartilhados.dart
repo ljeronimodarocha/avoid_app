@@ -32,11 +32,9 @@ class VideosCompartilhadosComigo extends StatelessWidget {
             return Consumer<VideoProvider>(
               builder: (ctx, videos, child) {
                 return RefreshIndicator(
-                  onRefresh: () {
-                    Provider.of<VideoProvider>(context, listen: false)
+                  onRefresh: () async {
+                    await Provider.of<VideoProvider>(context, listen: false)
                         .loadFilmesCompartilhados();
-
-                    return Future.value();
                   },
                   child: ScrollConfiguration(
                     behavior: ScrollConfiguration.of(context).copyWith(
