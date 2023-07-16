@@ -6,7 +6,7 @@ import '../../ui/pages/pages.dart';
 import '../presentation.dart';
 
 class LoginState {
-  String email = "";
+  String userName = "";
   String password = "";
 
   late String emailError = "";
@@ -19,7 +19,7 @@ class LoginState {
   bool get isFormValid =>
       emailError.isEmpty &&
       passwordError.isEmpty &&
-      email.isNotEmpty &&
+      userName.isNotEmpty &&
       password.isNotEmpty;
 }
 
@@ -34,7 +34,7 @@ class StreamLoginPresenter implements LoginPresenter {
       {required this.validation, required this.authentication});
 
   @override
-  Stream<String> get emailErrorStream =>
+  Stream<String> get userNameErrorStream =>
       _controller.stream.map((state) => state.emailError).distinct();
   @override
   Stream<String> get passwordErrorStream =>
@@ -62,9 +62,9 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   @override
-  void validateEmail(String email) {
-    _state.email = email;
-    String? error = validation.validate(field: 'email', value: email);
+  void validateUserName(String userName) {
+    _state.userName = userName;
+    String? error = validation.validate(field: 'userName', value: userName);
     if (error != null && error.isNotEmpty) {
       _state.emailError = error;
     } else {
@@ -91,8 +91,8 @@ class StreamLoginPresenter implements LoginPresenter {
     _update();
     await Future.delayed(Duration.zero);
     try {
-      await authentication.auth(
-          AuthenticationParams(email: _state.email, secret: _state.password));
+      await authentication.auth(AuthenticationParams(
+          userName: _state.userName, secret: _state.password));
     } on DomainError catch (error) {
       _state.mainError = error.description;
     }

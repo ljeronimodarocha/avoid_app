@@ -1,3 +1,4 @@
+import 'package:avoid_app/views/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../ui/pages/pages.dart';
@@ -38,6 +39,16 @@ class App extends StatelessWidget {
         GetPage(
           name: '/login',
           page: makeLoginPage,
+          transition: Transition.fadeIn,
+        ),
+        GetPage(
+          name: '/video',
+          page: () => Scaffold(
+            appBar: AppBar(
+              title: const Text('Vídeos'),
+            ),
+            body: const Text('Home'),
+          ),
           transition: Transition.fadeIn,
         ),
       ],

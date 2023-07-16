@@ -47,14 +47,14 @@ final token = faker.guid.guid();
 void main() {
   late ValidationSpy validation;
   late GetXLoginPresenter sut;
-  late String email;
+  late String userName;
   late String password;
   late Authentication authentication;
   late SaveCurrentAccount saveCurrentAccount;
 
   setUp(() {
     validation = ValidationSpy();
-    email = faker.internet.email();
+    userName = faker.internet.userName();
     password = faker.internet.password();
     authentication = AuthenticationSpy();
     saveCurrentAccount = SaveCurrentAccountSpy();
@@ -65,30 +65,31 @@ void main() {
         saveCurrentAccount: saveCurrentAccount);
   });
 
-  test('Should call Validation with correct email', () {
-    sut.validateEmail(email);
+  test('Should call Validation with correct userName', () {
+    sut.validateUserName(userName);
 
-    verify(() => validation.validate(field: 'email', value: email)).called(1);
+    verify(() => validation.validate(field: 'userName', value: userName))
+        .called(1);
   });
 
-  test('Should emit email error if validation fails', () {
-    sut.emailErrorStream
+  test('Should emit userName error if validation fails', () {
+    sut.userNameErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateEmail('error');
-    sut.validateEmail('error');
+    sut.validateUserName('error');
+    sut.validateUserName('error');
   });
 
-  test('Should emit empty if validation email succeeds', () {
-    sut.emailErrorStream
+  test('Should emit empty if validation userName succeeds', () {
+    sut.userNameErrorStream
         .listen(expectAsync1((error) => expect(error, isEmpty)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateEmail(faker.internet.email());
-    sut.validateEmail(faker.internet.email());
+    sut.validateUserName(faker.internet.userName());
+    sut.validateUserName(faker.internet.userName());
   });
 
   test('Should call Validation with correct password', () {
@@ -119,54 +120,54 @@ void main() {
   });
 
   test('Should emit password error if validation fails', () {
-    sut.emailErrorStream
+    sut.userNameErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.passwordErrorStream
         .listen(expectAsync1((error) => expect(error, isEmpty)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateEmail('error');
+    sut.validateUserName('error');
     sut.validateSenha(faker.internet.password());
   });
 
-  test('Should emit email error if validation fails', () {
-    sut.emailErrorStream
+  test('Should emit userName error if validation fails', () {
+    sut.userNameErrorStream
         .listen(expectAsync1((error) => expect(error, isEmpty)));
     sut.passwordErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateEmail(faker.internet.email());
+    sut.validateUserName(faker.internet.userName());
     sut.validateSenha('error');
   });
 
   test('Should emit empty if validation succeeds', () async {
-    sut.emailErrorStream
+    sut.userNameErrorStream
         .listen(expectAsync1((error) => expect(error, isEmpty)));
     sut.passwordErrorStream
         .listen(expectAsync1((error) => expect(error, isEmpty)));
 
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
-    sut.validateEmail(faker.internet.email());
+    sut.validateUserName(faker.internet.userName());
     await Future.delayed(Duration.zero);
     sut.validateSenha(faker.internet.password());
   });
 
   test('Should call Authentication with correct values', () async {
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     await sut.auth();
 
-    verify(() => authentication
-        .auth(AuthenticationParams(email: email, secret: password))).called(1);
+    verify(() => authentication.auth(
+        AuthenticationParams(userName: userName, secret: password))).called(1);
   });
 
   test('Should call SaveCurrentAccount with correct value', () async {
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     await sut.auth();
@@ -178,7 +179,7 @@ void main() {
     when(() => saveCurrentAccount.save(AccountEntity(token)))
         .thenThrow(DomainError.unexpected);
 
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
@@ -189,7 +190,7 @@ void main() {
   });
 
   test('Should emit corrrect events on Authentication success', () async {
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true]));
@@ -203,7 +204,7 @@ void main() {
         authentication: AuthenticationSpy(DomainError.invalidCredentials),
         saveCurrentAccount: saveCurrentAccount);
 
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
@@ -217,7 +218,7 @@ void main() {
     when(() => saveCurrentAccount.save(AccountEntity(token)))
         .thenThrow(DomainError.unexpected);
 
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
@@ -228,7 +229,7 @@ void main() {
   });
 
   test('Sould change page on success', () async {
-    sut.validateEmail(email);
+    sut.validateUserName(userName);
     sut.validateSenha(password);
 
     sut.navigateToStream

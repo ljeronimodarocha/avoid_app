@@ -13,7 +13,7 @@ class SplashPage extends StatelessWidget {
     presenter.checktAccount();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('4Dev'),
+        title: const Text('Avoid App'),
       ),
       body: Builder(builder: (context) {
         presenter.navigateToStream.listen((page) {

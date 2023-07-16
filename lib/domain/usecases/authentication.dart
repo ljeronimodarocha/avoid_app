@@ -7,11 +7,11 @@ abstract class Authentication {
 }
 
 class AuthenticationParams extends Equatable {
-  final String email;
+  final String userName;
   final String secret;
 
-  AuthenticationParams({required this.email, required this.secret});
+  AuthenticationParams({required this.userName, required this.secret});
 
   @override
-  List get props => [email, secret];
+  List get props => [userName, secret];
 }

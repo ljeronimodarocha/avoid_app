@@ -9,7 +9,7 @@ import '../../ui/pages/pages.dart';
 import '../presentation.dart';
 
 class GetXLoginPresenter extends GetxController implements LoginPresenter {
-  String _email = '';
+  String _userName = '';
   String _password = '';
 
   final Validation validation;
@@ -17,7 +17,7 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   final SaveCurrentAccount saveCurrentAccount;
 
   var _passwordError = RxString('');
-  var _emailError = RxString('');
+  var _userNameError = RxString('');
   var _mainError = RxString('');
   var _natigateTo = RxString('');
   var _isLoading = false.obs;
@@ -30,7 +30,7 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   });
 
   @override
-  Stream<String> get emailErrorStream => _emailError.stream;
+  Stream<String> get userNameErrorStream => _userNameError.stream;
   @override
   Stream<String> get passwordErrorStream => _passwordError.stream;
 
@@ -47,20 +47,20 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   void _validateForm() {
-    _isFormValid.value = _emailError.value.isEmpty &&
+    _isFormValid.value = _userNameError.value.isEmpty &&
         _passwordError.value.isEmpty &&
-        _email.isNotEmpty &&
+        _userName.isNotEmpty &&
         _password.isNotEmpty;
   }
 
   @override
-  void validateEmail(String email) {
-    _email = email;
-    String? error = validation.validate(field: 'email', value: email);
+  void validateUserName(String userName) {
+    _userName = userName;
+    String? error = validation.validate(field: 'userName', value: _userName);
     if (error != null && error.isNotEmpty) {
-      _emailError.value = error;
+      _userNameError.value = error;
     } else {
-      _emailError.value = '';
+      _userNameError.value = '';
     }
     _validateForm();
   }
@@ -82,9 +82,9 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
     _isLoading.value = true;
     try {
       final AccountEntity accountEntity = await authentication
-          .auth(AuthenticationParams(email: _email, secret: _password));
+          .auth(AuthenticationParams(userName: _userName, secret: _password));
       await saveCurrentAccount.save(accountEntity);
-      _natigateTo.value = '/surveys';
+      _natigateTo.value = '/video';
     } on DomainError catch (error) {
       _mainError.value = error.description;
       _isLoading.value = false;

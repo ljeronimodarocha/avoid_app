@@ -28,7 +28,7 @@ void main() {
   setUp(() {
     initStreams();
     presenter = LoginPresenterSpy();
-    when(() => presenter.emailErrorStream)
+    when(() => presenter.userNameErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
 
     when(() => presenter.passwordErrorStream)
@@ -51,10 +51,10 @@ void main() {
   testWidgets('Should load with corret initial state', (tester) async {
     await loadPage(tester);
 
-    final emailTextChildren = find.descendant(
-        of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
+    final userNameTextChildren = find.descendant(
+        of: find.bySemanticsLabel('User Name'), matching: find.byType(Text));
 
-    expect(emailTextChildren, findsOneWidget,
+    expect(userNameTextChildren, findsOneWidget,
         reason:
             'when a TextFormField has only text child, means it has no errors, since one of the childs is aways the label text');
 

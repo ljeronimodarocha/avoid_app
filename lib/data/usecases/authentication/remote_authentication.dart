@@ -18,8 +18,10 @@ class RemoteAuthentication implements Authentication {
           await httpClient.request(url: url, method: 'post', body: body);
       if (httpResponse == null) {
         throw DomainError.unexpected;
+      } else if (httpResponse['headers'] == null) {
+        throw DomainError.unexpected;
       }
-      return RemoteAccountModel.fromJson(httpResponse).toEntity();
+      return RemoteAccountModel.fromJson(httpResponse['headers']).toEntity();
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials
@@ -29,13 +31,14 @@ class RemoteAuthentication implements Authentication {
 }
 
 class RemoteAuthenticationParams {
-  final String email;
+  final String userName;
   final String password;
 
-  RemoteAuthenticationParams({required this.email, required this.password});
+  RemoteAuthenticationParams({required this.userName, required this.password});
 
-  Map get toJson => {'email': email, 'password': password};
+  Map get toJson => {'username': userName, 'password': password};
 
   factory RemoteAuthenticationParams.fromDomain(AuthenticationParams params) =>
-      RemoteAuthenticationParams(email: params.email, password: params.secret);
+      RemoteAuthenticationParams(
+          userName: params.userName, password: params.secret);
 }

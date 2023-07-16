@@ -19,7 +19,7 @@ Map mockValidData() => {'accessToken': guid, 'name': faker.person.name()};
 When mockRequest() => when(() => httpClient.request(
     url: url,
     method: 'post',
-    body: {'email': params.email, 'password': params.secret}));
+    body: {'userName': params.userName, 'password': params.secret}));
 
 void mockHttpData(Map data) {
   mockRequest().thenAnswer((_) async => data);
@@ -34,7 +34,7 @@ void main() {
     httpClient = HttpClientSpy();
     url = faker.internet.httpUrl();
     params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
+        userName: faker.internet.userName(), secret: faker.internet.password());
     mockHttpData(mockValidData());
     //sut = system under test
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
@@ -46,7 +46,7 @@ void main() {
       () => httpClient.request(
         url: url,
         method: 'post',
-        body: {'email': params.email, 'password': params.secret},
+        body: {'userName': params.userName, 'password': params.secret},
       ),
     );
   });

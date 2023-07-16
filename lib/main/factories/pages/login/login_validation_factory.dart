@@ -8,7 +8,7 @@ ValidationComposite makeValidationComposite() {
 
 List<FieldValidation> makeLoginValidations() {
   return [
-    ...ValidationBuilder.field('email').required().email().build(),
+    ...ValidationBuilder.field('username').required().build(),
     ...ValidationBuilder.field('password').required().build()
   ];
 }
