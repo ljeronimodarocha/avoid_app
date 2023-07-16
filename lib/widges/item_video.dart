@@ -1,6 +1,6 @@
-import 'package:avoid_app/model/video_model.dart';
 import 'package:flutter/material.dart';
 
+import '../domain/entities/video_entity.dart';
 import '../utils/app_route.dart';
 import 'menu_opcoes.dart';
 

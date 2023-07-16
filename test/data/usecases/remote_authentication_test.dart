@@ -14,12 +14,15 @@ late RemoteAuthentication sut;
 late AuthenticationParams params;
 String guid = faker.guid.guid();
 
-Map mockValidData() => {'accessToken': guid, 'name': faker.person.name()};
+Map mockValidData() => {
+      'headers': {'set-cookie': guid},
+      'body': {'teste': 'teste'}
+    };
 
 When mockRequest() => when(() => httpClient.request(
     url: url,
     method: 'post',
-    body: {'userName': params.userName, 'password': params.secret}));
+    body: {'username': params.userName, 'password': params.secret}));
 
 void mockHttpData(Map data) {
   mockRequest().thenAnswer((_) async => data);
@@ -46,7 +49,7 @@ void main() {
       () => httpClient.request(
         url: url,
         method: 'post',
-        body: {'userName': params.userName, 'password': params.secret},
+        body: {'username': params.userName, 'password': params.secret},
       ),
     );
   });
@@ -89,7 +92,7 @@ void main() {
 
     final account = await sut.auth(params);
 
-    expect(account.token, validaData['accessToken']);
+    expect(account.token, validaData['headers']['set-cookie']);
   });
 
   test(

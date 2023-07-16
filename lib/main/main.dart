@@ -1,11 +1,10 @@
-import 'package:avoid_app/views/home_screen.dart';
-import 'package:provider/provider.dart';
-
-import '../ui/pages/pages.dart';
-import '/main/factories/factories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import '/main/factories/factories.dart';
+import '../ui/pages/pages.dart';
 
 void main() {
   final previousCheck = Provider.debugCheckInvalidValueType;

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:avoid_app/model/video_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../domain/entities/video_entity.dart';
 import '../exceptions/firebase_exception.dart';
 import '../utils/Constant.dart';
 
