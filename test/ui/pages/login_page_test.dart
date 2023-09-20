@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:avoid_app/ui/pages/login/login_page.dart';
 import 'package:avoid_app/ui/pages/login/login_presenter.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,8 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 late LoginPresenter presenter;
 void initStreams() {
-  emailErrorController = StreamController<String>();
-  passwordErrorController = StreamController<String>();
+  emailErrorController = StreamController<UIError?>();
+  passwordErrorController = StreamController<UIError?>();
   mainErrorController = StreamController<String>();
   navigateToController = StreamController<String>();
 
@@ -44,8 +45,8 @@ void closeStreams() {
   isLoadingController.close();
 }
 
-late StreamController<String> emailErrorController;
-late StreamController<String> passwordErrorController;
+late StreamController<UIError?> emailErrorController;
+late StreamController<UIError?> passwordErrorController;
 late StreamController<String> mainErrorController;
 late StreamController<String> navigateToController;
 

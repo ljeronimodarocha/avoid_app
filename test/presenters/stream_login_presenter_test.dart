@@ -2,6 +2,7 @@ import 'package:avoid_app/domain/entities/entities.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
 import 'package:avoid_app/domain/usecases/usecases.dart';
 import 'package:avoid_app/presentation/presentation.dart';
+import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -10,10 +11,10 @@ class ValidationSpy extends Mock implements Validation {}
 
 class AuthenticationSpy extends Mock implements Authentication {}
 
-When mockValidationSpy(String field, String value) =>
-    when(() => validation.validate(field: field, value: value));
+When mockValidationSpy(String field, Map value) =>
+    when(() => validation.validate(field: field, input: value));
 
-void mockValidationSpyData(String field, String value, String data) {
+void mockValidationSpyData(String field, Map value, ValidationError? data) {
   mockValidationSpy(field, value).thenReturn(data);
 }
 
@@ -46,14 +47,16 @@ void main() {
   test('Should call Validation with correct userName', () {
     sut.validateUserName(userName);
 
-    verify(() => validation.validate(field: 'userName', value: userName))
-        .called(1);
+    verify(() => validation.validate(
+        field: 'userName',
+        input: {'userName': userName, 'password': ''})).called(1);
   });
 
-  test('Should emit userName error if validation fails', () {
-    mockValidationSpyData('userName', 'error', 'error');
+  test('Should emit userName error if validation fails 1', () {
+    mockValidationSpy('userName', {'userName': 'error', 'password': ''})
+        .thenReturn(ValidationError.invalidField);
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -63,7 +66,7 @@ void main() {
 
   test('Should emit empty if validation userName succeeds', () {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -74,69 +77,84 @@ void main() {
   test('Should call Validation with correct password', () {
     sut.validateSenha(password);
 
-    verify(() => validation.validate(field: 'password', value: password)
-        as Function()).called(1);
+    verify(() => validation.validate(
+        field: 'password',
+        input: {'userName': '', 'password': password})).called(1);
   });
 
-  test('Should emit password error if validation fails', () {
-    mockValidationSpyData('password', 'error', 'error');
+  test('Should emit password error if validation fails1 ', () {
+    mockValidationSpyData(
+        'password',
+        {'userName': userName, 'password': 'error'},
+        ValidationError.invalidField);
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
+    sut.validateUserName(userName);
     sut.validateSenha('error');
     sut.validateSenha('error');
   });
 
   test('Should emit empty if validation password succeeds', () {
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
-
+    sut.validateUserName(userName);
     sut.validateSenha(faker.internet.password());
     sut.validateSenha(faker.internet.password());
   });
 
-  test('Should emit password error if validation fails with all fields tested',
+  test(
+      'Should emit password error if validation fails with all fields tested 11',
       () {
-    mockValidationSpyData('userName', 'error', 'error');
+    mockValidationSpyData(
+        'password',
+        {'userName': 'error', 'password': password},
+        ValidationError.invalidField);
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
-
+    sut.validateUserName(userName);
     sut.validateUserName('error');
-    sut.validateSenha(faker.internet.password());
+    sut.validateSenha(password);
   });
 
   test('Should emit password error if validation fails', () {
-    mockValidationSpyData('password', 'error', 'error');
+    mockValidationSpyData(
+        'password',
+        {'userName': userName, 'password': 'error'},
+        ValidationError.invalidField);
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateUserName(faker.internet.userName());
+    sut.validateUserName(userName);
     sut.validateSenha('error');
   });
 
   test('Should emit empty if validation succeeds', () async {
+    mockValidationSpyData(
+        "userName", {'userName': userName, 'password': password}, null);
+    mockValidationSpyData(
+        "password", {'userName': userName, 'password': password}, null);
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
 
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
-    sut.validateUserName(faker.internet.userName());
-    await Future.delayed(Duration.zero);
-    sut.validateSenha(faker.internet.password());
+    sut.validateUserName(userName);
+    sut.validateSenha(password);
   });
 
   test('Should call Authentication with correct values', () async {

@@ -2,15 +2,23 @@ import 'package:avoid_app/domain/entities/entities.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
 import 'package:avoid_app/domain/usecases/usecases.dart';
 import 'package:avoid_app/presentation/presentation.dart';
+import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class ValidationSpy extends Mock implements Validation {
+  ValidationError? error;
+
+  ValidationSpy({this.error});
+
   @override
-  String? validate({required String field, required String value}) {
-    super.noSuchMethod(Invocation.method(#validate, [field, value]));
-    return value == 'error' ? value : null;
+  ValidationError? validate({required String field, required Map input}) {
+    super.noSuchMethod(Invocation.method(#validate, [field, input]));
+    if (input[field] == 'error') {
+      return ValidationError.invalidField;
+    }
+    return null;
   }
 }
 
@@ -68,13 +76,14 @@ void main() {
   test('Should call Validation with correct userName', () {
     sut.validateUserName(userName);
 
-    verify(() => validation.validate(field: 'userName', value: userName))
-        .called(1);
+    verify(() => validation.validate(
+        field: 'userName',
+        input: {'userName': userName, 'password': ''})).called(1);
   });
 
   test('Should emit userName error if validation fails', () {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -84,7 +93,7 @@ void main() {
 
   test('Should emit empty if validation userName succeeds', () {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -95,13 +104,14 @@ void main() {
   test('Should call Validation with correct password', () {
     sut.validateSenha(password);
 
-    verify(() => validation.validate(field: 'password', value: password))
-        .called(1);
+    verify(() => validation.validate(
+        field: 'password',
+        input: {'userName': '', 'password': password})).called(1);
   });
 
-  test('Should emit password error if validation fails', () {
+  test('Should emit password error if validation fails 2', () {
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -111,7 +121,7 @@ void main() {
 
   test('Should emit empty if validation password succeeds', () {
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -121,21 +131,21 @@ void main() {
 
   test('Should emit password error if validation fails', () {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validateUserName('error');
-    sut.validateSenha(faker.internet.password());
+    sut.validateUserName(faker.internet.email());
+    sut.validateSenha('error');
   });
 
-  test('Should emit userName error if validation fails', () {
+  test('Should emit userName error if validation fails 2', () {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -145,9 +155,9 @@ void main() {
 
   test('Should emit empty if validation succeeds', () async {
     sut.userNameErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, isEmpty)));
+        .listen(expectAsync1((error) => expect(error, null)));
 
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
@@ -234,5 +244,12 @@ void main() {
 
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/video')));
     await sut.auth();
+  });
+
+  test('Should go to SignUpPage on link click', () async {
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/signup')));
+
+    sut.goToSignUp();
   });
 }

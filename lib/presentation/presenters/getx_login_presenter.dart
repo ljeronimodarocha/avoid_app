@@ -5,6 +5,7 @@ import 'package:get/state_manager.dart';
 import '../../domain/entities/entities.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
+import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
 import '../presentation.dart';
 
@@ -16,8 +17,9 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   final Authentication authentication;
   final SaveCurrentAccount saveCurrentAccount;
 
-  var _passwordError = RxString('');
-  var _userNameError = RxString('');
+  var _userNameError = Rx<UIError?>(null);
+  var _passwordError = Rx<UIError?>(null);
+
   var _mainError = RxString('');
   var _natigateTo = RxString('');
   var _isLoading = false.obs;
@@ -30,9 +32,9 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   });
 
   @override
-  Stream<String> get userNameErrorStream => _userNameError.stream;
+  Stream<UIError?> get userNameErrorStream => _userNameError.stream;
   @override
-  Stream<String> get passwordErrorStream => _passwordError.stream;
+  Stream<UIError?> get passwordErrorStream => _passwordError.stream;
 
   @override
   Stream<String> get mainErrorStream => _mainError.stream;
@@ -47,8 +49,8 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   void _validateForm() {
-    _isFormValid.value = _userNameError.value.isEmpty &&
-        _passwordError.value.isEmpty &&
+    _isFormValid.value = _userNameError.value == null &&
+        _passwordError.value == null &&
         _userName.isNotEmpty &&
         _password.isNotEmpty;
   }
@@ -56,24 +58,32 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   @override
   void validateUserName(String userName) {
     _userName = userName;
-    String? error = validation.validate(field: 'userName', value: _userName);
-    if (error != null && error.isNotEmpty) {
-      _userNameError.value = error;
-    } else {
-      _userNameError.value = '';
-    }
+    _userNameError.value = _validateField('userName');
+
     _validateForm();
+  }
+
+  UIError? _validateField(String field) {
+    final formData = {
+      'userName': _userName,
+      'password': _password,
+    };
+    final error = validation.validate(field: field, input: formData);
+    switch (error) {
+      case ValidationError.invalidField:
+        return UIError.invalidField;
+      case ValidationError.requiredField:
+        return UIError.requiredField;
+      default:
+        return null;
+    }
   }
 
   @override
   void validateSenha(String password) {
     _password = password;
-    String? error = validation.validate(field: 'password', value: password);
-    if (error != null && error.isNotEmpty) {
-      _passwordError.value = error;
-    } else {
-      _passwordError.value = '';
-    }
+    _passwordError.value = _validateField('password');
+
     _validateForm();
   }
 
@@ -89,5 +99,10 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
       _mainError.value = error.description;
       _isLoading.value = false;
     }
+  }
+
+  @override
+  void goToSignUp() {
+    _natigateTo.value = '/signup';
   }
 }

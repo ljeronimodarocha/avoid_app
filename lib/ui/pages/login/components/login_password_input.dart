@@ -1,3 +1,4 @@
+import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,13 +8,13 @@ class PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginPresenter = Provider.of<LoginPresenter>(context);
-    return StreamBuilder<String>(
+    return StreamBuilder<UIError?>(
         stream: loginPresenter.passwordErrorStream,
         builder: (context, snapshot) {
           return TextFormField(
             decoration: InputDecoration(
               labelText: 'Senha',
-              errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
+              errorText: snapshot.data?.description,
               icon: Icon(
                 Icons.lock,
                 color: Theme.of(context).primaryColorLight,

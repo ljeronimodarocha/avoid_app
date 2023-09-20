@@ -14,7 +14,7 @@ class GetxSplashPresenter implements SplashPresenter {
     await Future.delayed(Duration(seconds: durationInSeconds));
     try {
       final account = await loadCurrentAccount.load();
-      _navigateTo.value = account.token.isNotEmpty ? '/video' : '/login';
+      _navigateTo.value = account.token.isNotEmpty ? '/login' : '/login';
     } catch (error) {
       _navigateTo.value = '/login';
     }

@@ -41,6 +41,10 @@ class App extends StatelessWidget {
           transition: Transition.fadeIn,
         ),
         GetPage(
+            name: '/signUp',
+            page: () => Text(''),
+            transition: Transition.fadeIn),
+        GetPage(
           name: '/video',
           page: () => Scaffold(
             appBar: AppBar(

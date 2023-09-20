@@ -1,5 +1,5 @@
-import '../../../../validation/protocols/protocols.dart';
-import '../../../../validation/validators/validators.dart';
+import '../../../../ui/validation/protocols/protocols.dart';
+import '../../../../ui/validation/validators/validators.dart';
 import '../../../builders/builders.dart';
 
 ValidationComposite makeValidationComposite() {

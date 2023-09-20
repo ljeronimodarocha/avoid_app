@@ -65,7 +65,7 @@ class LoginPage extends StatelessWidget {
                       PasswordInput(),
                       LoginButton(),
                       TextButton.icon(
-                        onPressed: () {},
+                        onPressed: presenter.goToSignUp,
                         icon: const Icon(Icons.person),
                         label: const Text(
                           'Criar Conta',

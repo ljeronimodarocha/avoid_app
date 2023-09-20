@@ -1,6 +1,8 @@
+import '../../helpers/helpers.dart';
+
 abstract class LoginPresenter {
-  Stream<String> get userNameErrorStream;
-  Stream<String> get passwordErrorStream;
+  Stream<UIError?> get userNameErrorStream;
+  Stream<UIError?> get passwordErrorStream;
   Stream<String> get mainErrorStream;
   Stream<String> get navigateToStream;
 
@@ -11,5 +13,6 @@ abstract class LoginPresenter {
   void validateSenha(String senha);
 
   Future<void> auth();
+  void goToSignUp();
   void dispose();
 }

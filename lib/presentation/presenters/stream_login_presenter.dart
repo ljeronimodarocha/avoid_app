@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/authentication.dart';
+import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
 import '../presentation.dart';
 
@@ -9,16 +10,16 @@ class LoginState {
   String userName = "";
   String password = "";
 
-  late String emailError = "";
-  late String passwordError = "";
+  late UIError? emailError;
+  late UIError? passwordError;
   late String mainError = "";
   late String navigateTo = "";
 
   bool isLoading = false;
 
   bool get isFormValid =>
-      emailError.isEmpty &&
-      passwordError.isEmpty &&
+      emailError != null &&
+      passwordError != null &&
       userName.isNotEmpty &&
       password.isNotEmpty;
 }
@@ -34,11 +35,19 @@ class StreamLoginPresenter implements LoginPresenter {
       {required this.validation, required this.authentication});
 
   @override
-  Stream<String> get userNameErrorStream =>
-      _controller.stream.map((state) => state.emailError).distinct();
-  @override
-  Stream<String> get passwordErrorStream =>
-      _controller.stream.map((state) => state.passwordError).distinct();
+  Stream<UIError?> get userNameErrorStream {
+    _controller.stream.map((state) {
+      if (state.emailError != null) return state.emailError;
+    });
+    return const Stream.empty();
+  }
+
+  Stream<UIError?> get passwordErrorStream {
+    _controller.stream.map((state) {
+      if (state.passwordError != null) return state.passwordError;
+    });
+    return const Stream.empty();
+  }
 
   @override
   Stream<String> get mainErrorStream =>
@@ -61,27 +70,35 @@ class StreamLoginPresenter implements LoginPresenter {
     }
   }
 
+  UIError? _validateField(String field) {
+    final formData = {
+      'userName': _state.userName,
+      'password': _state.password,
+    };
+    final error = validation.validate(field: field, input: formData);
+    switch (error) {
+      case ValidationError.invalidField:
+        return UIError.invalidField;
+      case ValidationError.requiredField:
+        return UIError.requiredField;
+      default:
+        return null;
+    }
+  }
+
   @override
   void validateUserName(String userName) {
     _state.userName = userName;
-    String? error = validation.validate(field: 'userName', value: userName);
-    if (error != null && error.isNotEmpty) {
-      _state.emailError = error;
-    } else {
-      _state.emailError = '';
-    }
+    _state.emailError = _validateField('userName');
+
     _update();
   }
 
   @override
   void validateSenha(String password) {
     _state.password = password;
-    String? error = validation.validate(field: 'password', value: password);
-    if (error != null && error.isNotEmpty) {
-      _state.passwordError = error;
-    } else {
-      _state.passwordError = '';
-    }
+    _state.passwordError = _validateField('password');
+
     _update();
   }
 
@@ -97,6 +114,12 @@ class StreamLoginPresenter implements LoginPresenter {
       _state.mainError = error.description;
     }
     _state.isLoading = false;
+    _update();
+  }
+
+  @override
+  void goToSignUp() {
+    _state.navigateTo = '/signup';
     _update();
   }
 
