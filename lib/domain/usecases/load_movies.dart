@@ -1,5 +1,5 @@
 import '../entities/movie_entity.dart';
 
-abstract class load_movies {
+abstract class LoadMovies {
   Future<List<MovieEntity>> load();
 }

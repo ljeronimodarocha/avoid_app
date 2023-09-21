@@ -2,7 +2,7 @@ import 'package:avoid_app/domain/entities/movie_entity.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
 import 'package:avoid_app/domain/usecases/save_movie.dart';
 import 'package:avoid_app/presentation/presentation.dart';
-import 'package:avoid_app/presentation/presenters/getx_video_presenter.dart';
+import 'package:avoid_app/presentation/presenters/getx_save_movie_presenter.dart';
 import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';

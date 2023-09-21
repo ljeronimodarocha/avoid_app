@@ -9,7 +9,7 @@ import 'package:mocktail/mocktail.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
-class RemoveLoadMovies implements load_movies {
+class RemoveLoadMovies implements LoadMovies {
   final HttpClient httpClient;
   String url;
 
