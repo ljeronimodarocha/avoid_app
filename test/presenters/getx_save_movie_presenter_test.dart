@@ -32,7 +32,7 @@ class SaveFilmeSpy extends Mock implements SaveMovie {
 }
 
 void main() {
-  late GetXVideoPresenter sut;
+  late GetXSaveMoviePresenter sut;
   late SaveMovie saveFilmeSpy;
   late Validation validationSpy;
 
@@ -42,7 +42,7 @@ void main() {
   setUp(() {
     saveFilmeSpy = SaveFilmeSpy();
     validationSpy = ValidationSpy();
-    sut = GetXVideoPresenter(validation: validationSpy, save: saveFilmeSpy);
+    sut = GetXSaveMoviePresenter(validation: validationSpy, save: saveFilmeSpy);
   });
 
   test('Should emit corrrect events on UnexpectedError', () async {

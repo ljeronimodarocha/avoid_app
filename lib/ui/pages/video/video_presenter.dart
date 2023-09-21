@@ -1,6 +1,6 @@
 import '../../helpers/errors/ui_error.dart';
 
-abstract class VideoPresenter {
+abstract class SaveMoviePresenter {
   Stream<UIError?> get nameErrorStream;
   Stream<UIError?> get categoriaErrorStream;
   Stream<String> get mainErrorStream;

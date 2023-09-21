@@ -7,7 +7,7 @@ import '../../ui/helpers/errors/ui_error.dart';
 import '../../ui/pages/video/video.dart';
 import '../protocols/validation.dart';
 
-class GetXVideoPresenter implements VideoPresenter {
+class GetXSaveMoviePresenter implements SaveMoviePresenter {
   String _filmeName = '';
   String _filmeCategoria = '';
 
@@ -22,7 +22,7 @@ class GetXVideoPresenter implements VideoPresenter {
 
   final Validation validation;
   final SaveMovie save;
-  GetXVideoPresenter({required this.validation, required this.save});
+  GetXSaveMoviePresenter({required this.validation, required this.save});
 
   @override
   Stream<UIError?> get categoriaErrorStream => _categoryError.stream;
