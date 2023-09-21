@@ -13,11 +13,7 @@ class RemoteSaveMovie implements SaveMovie {
   Future<void> save(MovieEntity params) async {
     final body = RemoteMovieParams.fromDomain(params).toJson;
     try {
-      final httpResponse =
-          await httpClient.request(url: url, method: 'POST', body: body);
-      if (httpResponse == null || httpResponse['statusCode'] != 200) {
-        throw DomainError.unexpected;
-      }
+      await httpClient.request(url: url, method: 'POST', body: body);
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials
