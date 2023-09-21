@@ -76,6 +76,12 @@ void main() {
     expect(response.length, 2);
   });
 
+  test('Should return emtpty list Movies', () async {
+    mockRequest().thenAnswer((_) async => {'statusCode': 200, 'body': '[]'});
+    final response = await sut.load();
+    expect(response.length, 0);
+  });
+
   test('Should return 403 when user is not autenticated', () {
     mockRequest().thenThrow(HttpError.unauthorized);
     final future = sut.load();
