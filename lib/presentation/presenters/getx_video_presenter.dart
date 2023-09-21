@@ -62,7 +62,7 @@ class GetXVideoPresenter implements VideoPresenter {
   Future<void> saveMovie() async {
     _isLoading.value = true;
     try {
-      await save.save(MovieEntity(_filmeName, _filmeCategoria));
+      await save.save(MovieEntity(1, _filmeName, _filmeCategoria));
       _natigateTo.value = '/home';
     } on DomainError catch (error) {
       _mainError.value = error.description;

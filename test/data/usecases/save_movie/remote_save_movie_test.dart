@@ -8,7 +8,7 @@ import 'package:mocktail/mocktail.dart';
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  MovieEntity movie = MovieEntity('teste', 'teste');
+  MovieEntity movie = MovieEntity(1, 'teste', 'teste');
   Map body = {"nome": movie.nome, "categoria": movie.categoria};
   late RemoteSaveMovie sut;
   late HttpClientSpy clientSpy;

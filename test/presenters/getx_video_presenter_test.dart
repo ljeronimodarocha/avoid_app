@@ -46,7 +46,7 @@ void main() {
   });
 
   test('Should emit corrrect events on UnexpectedError', () async {
-    when(() => saveFilmeSpy.save(MovieEntity(name, categoria)))
+    when(() => saveFilmeSpy.save(MovieEntity(1, name, categoria)))
         .thenThrow(DomainError.unexpected);
 
     sut.validateName(name);
@@ -89,6 +89,6 @@ void main() {
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/home')));
 
     sut.saveMovie();
-    verify(() => saveFilmeSpy.save(MovieEntity(name, categoria)));
+    verify(() => saveFilmeSpy.save(MovieEntity(1, name, categoria)));
   });
 }
