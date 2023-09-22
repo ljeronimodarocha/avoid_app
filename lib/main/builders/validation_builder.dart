@@ -1,4 +1,5 @@
 import '../../ui/validation/protocols/protocols.dart';
+import '../../ui/validation/validators/compare_fields_validation.dart';
 import '../../ui/validation/validators/validators.dart';
 
 class ValidationBuilder {
@@ -21,6 +22,12 @@ class ValidationBuilder {
 
   ValidationBuilder email() {
     validations.add(EmailValidation(fieldName));
+    return this;
+  }
+
+  ValidationBuilder sameAs(String fieldToCompare) {
+    validations.add(CompareFieldsValidation(
+        field: fieldName, fieldToCompare: fieldToCompare));
     return this;
   }
 

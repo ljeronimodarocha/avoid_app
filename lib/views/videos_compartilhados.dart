@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/video_provider.dart';
-import '../widges/item_video.dart';
 
 class VideosCompartilhadosComigo extends StatelessWidget {
   const VideosCompartilhadosComigo({super.key});

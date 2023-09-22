@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:avoid_app/domain/entities/movie_entity.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
 import 'package:avoid_app/domain/usecases/load_movies.dart';
@@ -23,19 +21,23 @@ void main() {
 
   test('Should return list of movires', () async {
     await sut.load();
-    var quantidade = await sut.movies.length;
-    log(quantidade);
-    expect(quantidade, completion(isNot(null)));
-    expect(quantidade, completion(isNot(0)));
-    expect(quantidade, completion(1));
+    sut.movies.listen((list) {
+      expect(list, isNot(null));
+    });
+    sut.movies.listen((list) {
+      expect(list.length, isNot(0));
+    });
+    sut.movies.listen((list) {
+      expect(list.length, 1);
+    });
   });
 
   test('Should return empty list', () async {
     mockLoadMovies().thenAnswer((_) async => List<MovieEntity>.empty());
     await sut.load();
-    final quantidade = await sut.movies.length;
-    expect(quantidade, isNot(null));
-    expect(quantidade, 0);
+    sut.movies.listen((list) {
+      expect(list.length, 0);
+    });
   });
 
   test('Should emit corrrect events on UnexpectedError', () async {

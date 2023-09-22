@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'components/error_message.dart';
 import 'components/login_button.dart';
-import 'components/login_username_input.dart';
 import 'components/login_password_input.dart';
+import 'components/login_username_input.dart';
 import 'components/spinner_dialog.dart';
 
 class LoginPage extends StatelessWidget {

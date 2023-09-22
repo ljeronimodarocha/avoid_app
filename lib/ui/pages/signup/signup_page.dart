@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../helpers/i18n/strings.dart';
 import '../components/headline1.dart';
-import '../components/login_header.dart';
 import '../login/components/error_message.dart';
 import '../login/components/spinner_dialog.dart';
 import 'components/components.dart';
@@ -53,29 +52,28 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                LoginHeader(),
                 Headline1(text: S.addAccount),
                 Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Provider(
+                  padding: const EdgeInsets.all(32),
+                  child: ListenableProvider(
                     create: (_) => presenter,
                     child: Form(
                       child: Column(
                         children: <Widget>[
                           NameInput(),
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                             child: EmailInput(),
                           ),
                           PasswordInput(),
                           Padding(
-                            padding: EdgeInsets.only(top: 8, bottom: 32),
+                            padding: const EdgeInsets.only(top: 8, bottom: 32),
                             child: PasswordConfirmationInput(),
                           ),
                           SignUpButton(),
                           ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.exit_to_app),
+                              onPressed: () => presenter.goToLogin(),
+                              icon: const Icon(Icons.exit_to_app),
                               label: Text(S.login))
                         ],
                       ),

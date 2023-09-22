@@ -1,4 +1,5 @@
 import 'package:avoid_app/main/factories/pages/home/home_page_factory.dart';
+import 'package:avoid_app/main/factories/pages/signup/signup_page_factory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -42,8 +43,13 @@ class App extends StatelessWidget {
           transition: Transition.fadeIn,
         ),
         GetPage(
-            name: '/signUp',
-            page: () => Text(''),
+            name: '/signup',
+            page: () => Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Sign Up'),
+                  ),
+                  body: makeSignUpPage(),
+                ),
             transition: Transition.fadeIn),
         GetPage(
           name: '/video',
