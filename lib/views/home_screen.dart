@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: StreamBuilder(
         stream: widget.presenter.movies,
-        builder: (ctx, snapshot) {
+        builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -43,11 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (snapshot.data != null || snapshot.data!.isNotEmpty) {
             items = snapshot.data!;
             return RefreshIndicator(
-              onRefresh: () {
-                widget.presenter.load();
-                setState(() {});
-                return Future.value();
-              },
+              onRefresh: () => widget.presenter.load(),
               child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(context).copyWith(
                   dragDevices: {
@@ -57,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: ListView.builder(
                   itemCount: items.length,
-                  itemBuilder: (ctx, index) =>
+                  itemBuilder: (_, index) =>
                       ItemVideo(snapshot.data![index], true),
                 ),
               ),

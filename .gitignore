@@ -47,3 +47,6 @@ app.*.map.json
 /windows/runner/win32_window.h
 /ios/*
 /linux/*
+/web/*
+/windows/*
+/macos/*
