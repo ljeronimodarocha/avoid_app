@@ -1,0 +1,6 @@
+{
+  "java.project.sourcePaths": [
+    "lib/main/factories/pages",
+    "lib/data/usecases/load_movies"
+  ]
+}

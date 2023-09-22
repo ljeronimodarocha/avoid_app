@@ -44,10 +44,10 @@ class VideosCompartilhadosComigo extends StatelessWidget {
                       },
                     ),
                     child: ListView.builder(
-                      itemCount: videos.videoSharedCount,
-                      itemBuilder: (ctx, index) =>
-                          ItemVideo(videos.sharedItens[index], false),
-                    ),
+                        itemCount: videos.videoSharedCount,
+                        itemBuilder: (ctx, index) =>
+                            /*  ItemVideo(videos.sharedItens[index], false), */
+                            Text('data')),
                   ),
                 );
               },

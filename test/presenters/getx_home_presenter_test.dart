@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:avoid_app/domain/entities/movie_entity.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
 import 'package:avoid_app/domain/usecases/load_movies.dart';
@@ -14,23 +16,26 @@ void main() {
 
   setUp(() {
     loadMovies = LoadMoviesSpy();
-    sut = GetXHomePresenter(loadMovies);
+    sut = GetXHomePresenter(loadMovies: loadMovies);
     mockLoadMovies()
         .thenAnswer((_) async => List.of([MovieEntity(1, 'teste', 'teste')]));
   });
 
   test('Should return list of movires', () async {
-    var response = await sut.load();
-    expect(response, isNot(null));
-    expect(response.length, isNot(0));
-    expect(response.length, 1);
+    await sut.load();
+    var quantidade = await sut.movies.length;
+    log(quantidade);
+    expect(quantidade, completion(isNot(null)));
+    expect(quantidade, completion(isNot(0)));
+    expect(quantidade, completion(1));
   });
 
   test('Should return empty list', () async {
     mockLoadMovies().thenAnswer((_) async => List<MovieEntity>.empty());
-    var response = await sut.load();
-    expect(response, isNot(null));
-    expect(response.length, 0);
+    await sut.load();
+    final quantidade = await sut.movies.length;
+    expect(quantidade, isNot(null));
+    expect(quantidade, 0);
   });
 
   test('Should emit corrrect events on UnexpectedError', () async {

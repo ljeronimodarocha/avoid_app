@@ -1,47 +1,16 @@
 import 'dart:convert';
 
 import 'package:avoid_app/data/http/http.dart';
-import 'package:avoid_app/domain/entities/movie_entity.dart';
+import 'package:avoid_app/data/usecases/load_movies/remote_load_movies.dart';
 import 'package:avoid_app/domain/helpers/helpers.dart';
-import 'package:avoid_app/domain/usecases/load_movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
-class RemoveLoadMovies implements LoadMovies {
-  final HttpClient httpClient;
-  String url;
-
-  RemoveLoadMovies(this.httpClient, this.url);
-
-  @override
-  Future<List<MovieEntity>> load() async {
-    List<MovieEntity> listMovie = [];
-    try {
-      final response = await httpClient.request(url: url, method: 'GET');
-      if (response == null ||
-          response['statusCode'] != 200 ||
-          response['body'] == null) {
-        throw HttpError.badRequest;
-      }
-      final body = jsonDecode(response['body']) as List;
-      for (var element in body) {
-        listMovie.add(MovieEntity(
-            element['id'], element['nome'], element['categoriaFilmes']));
-      }
-    } on HttpError catch (error) {
-      throw error == HttpError.unauthorized
-          ? DomainError.invalidCredentials
-          : DomainError.unexpected;
-    }
-    return listMovie;
-  }
-}
-
 void main() {
   late HttpClientSpy httpClient;
-  late RemoveLoadMovies sut;
+  late RemoteLoadMovies sut;
   String url = '/filme';
   List<Map> listMovie = [
     {
@@ -61,7 +30,7 @@ void main() {
 
   setUp(() {
     httpClient = HttpClientSpy();
-    sut = RemoveLoadMovies(httpClient, url);
+    sut = RemoteLoadMovies(httpClient, url);
     mockRequest().thenAnswer(
         (_) async => {'statusCode': 200, 'body': jsonEncode(listMovie)});
   });

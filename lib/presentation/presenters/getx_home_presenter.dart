@@ -6,21 +6,24 @@ import '../../domain/usecases/load_movies.dart';
 import '../../ui/pages/home/home_presenter.dart';
 
 class GetXHomePresenter implements HomePresenter {
-  LoadMovies _loadMovies;
+  LoadMovies loadMovies;
 
   var _mainError = RxString('');
+  var _listMovies = RxList<MovieEntity>();
   @override
   Stream<String> get mainErrorStream => _mainError.stream;
-  GetXHomePresenter(this._loadMovies);
+  GetXHomePresenter({required this.loadMovies});
 
   @override
-  Future<List<MovieEntity>> load() async {
+  Future<void> load() async {
     try {
-      final response = await _loadMovies.load();
-      return response;
+      final response = await loadMovies.load();
+      _listMovies.value = response;
     } on DomainError catch (error) {
       _mainError.value = error.description;
     }
-    return List<MovieEntity>.empty();
   }
+
+  @override
+  Stream<List<MovieEntity>> get movies => _listMovies.stream;
 }

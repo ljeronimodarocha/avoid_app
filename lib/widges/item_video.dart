@@ -1,11 +1,11 @@
+import 'package:avoid_app/domain/entities/movie_entity.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/entities/video_entity.dart';
 import '../utils/app_route.dart';
 import 'menu_opcoes.dart';
 
 class ItemVideo extends StatelessWidget {
-  final VideoModel item;
+  final MovieEntity item;
   final bool habilitarMenuOpcoes;
   const ItemVideo(this.item, this.habilitarMenuOpcoes, {super.key});
 
@@ -24,7 +24,7 @@ class ItemVideo extends StatelessWidget {
               Text(item.nome),
               const Spacer(),
               Text(item.categoria),
-              if (habilitarMenuOpcoes) MenuOpcoes(item.id),
+              if (habilitarMenuOpcoes) MenuOpcoes(item.id!),
             ],
           ),
         ),

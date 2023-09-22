@@ -15,8 +15,10 @@ class HttpAdapter implements HttpClient {
     Map? headers,
   }) async {
     final defaultHeaders = headers?.cast<String, String>() ?? {}
-      ..addAll(
-          {'content-type': 'application/json', 'accept': 'application/json'});
+      ..addAll({
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      });
     final jsonBody = body != null ? jsonEncode(body) : null;
     var response = Response('', 500);
     Future<Response>? futureResponse;

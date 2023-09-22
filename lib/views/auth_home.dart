@@ -1,5 +1,4 @@
 import 'package:avoid_app/providers/auth_provider.dart';
-import 'package:avoid_app/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +23,7 @@ class AuthOrHome extends StatelessWidget {
               child: Text('Ocorreu um erro!'),
             );
           } else {
-            return const HomeScreen(
-              true,
-            );
+            return const Text('');
           }
         });
   }

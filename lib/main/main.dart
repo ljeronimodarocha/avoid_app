@@ -1,3 +1,4 @@
+import 'package:avoid_app/main/factories/pages/home/home_page_factory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,7 @@ class App extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Vídeos'),
             ),
-            body: const Text('Home'),
+            body: makeHomePage(),
           ),
           transition: Transition.fadeIn,
         ),
