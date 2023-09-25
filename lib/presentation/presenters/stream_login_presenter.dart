@@ -10,10 +10,10 @@ class LoginState {
   String userName = "";
   String password = "";
 
-  late UIError? emailError;
-  late UIError? passwordError;
-  late String mainError = "";
-  late String navigateTo = "";
+  UIError? emailError;
+  UIError? passwordError;
+  String mainError = "";
+  String navigateTo = "";
 
   bool isLoading = false;
 
@@ -42,6 +42,7 @@ class StreamLoginPresenter implements LoginPresenter {
     return const Stream.empty();
   }
 
+  @override
   Stream<UIError?> get passwordErrorStream {
     _controller.stream.map((state) {
       if (state.passwordError != null) return state.passwordError;
@@ -119,12 +120,6 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void goToSignUp() {
-    _state.navigateTo = '/signup';
-    _update();
-  }
-
-  @override
-  void goToLogin() {
     _state.navigateTo = '/signup';
     _update();
   }
