@@ -19,7 +19,7 @@ void main() {
 
   When mockRequest() =>
       when(() => httpClient.request(url: url, method: 'post', body: {
-            'name': params.name,
+            'username': params.name,
             'email': params.email,
             'password': params.password,
             'passwordConfirmation': params.passwordConfirmation
@@ -50,7 +50,7 @@ void main() {
     await sut.add(params);
 
     verify(() => httpClient.request(url: url, method: 'post', body: {
-          'name': params.name,
+          'username': params.name,
           'email': params.email,
           'password': params.password,
           'passwordConfirmation': params.passwordConfirmation

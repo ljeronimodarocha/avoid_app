@@ -1,4 +1,4 @@
-import '../i18n/resources.dart';
+import '../i18n/i18n.dart';
 
 enum UIError {
   requiredField,

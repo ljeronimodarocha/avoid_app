@@ -1,8 +1,8 @@
 import 'package:avoid_app/domain/entities/movie_entity.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/app_route.dart';
-import 'menu_opcoes.dart';
+import '../../../../utils/app_route.dart';
+import '../../../../widges/menu_opcoes.dart';
 
 class ItemVideo extends StatelessWidget {
   final MovieEntity item;

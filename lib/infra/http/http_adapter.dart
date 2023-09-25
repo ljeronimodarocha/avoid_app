@@ -33,7 +33,7 @@ class HttpAdapter implements HttpClient {
             client.put(Uri.parse(url), headers: defaultHeaders, body: jsonBody);
       }
       if (futureResponse != null) {
-        response = await futureResponse.timeout(Duration(seconds: 10));
+        response = await futureResponse.timeout(const Duration(seconds: 10));
       }
     } catch (error) {
       throw HttpError.serverError;

@@ -2,7 +2,7 @@ import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/i18n/strings.dart';
+import '../../../helpers/i18n/i18n.dart';
 import '../signup_presenter.dart';
 
 class PasswordConfirmationInput extends StatelessWidget {
@@ -15,7 +15,7 @@ class PasswordConfirmationInput extends StatelessWidget {
         builder: (context, snapshot) {
           return TextFormField(
             decoration: InputDecoration(
-              labelText: S.confirmPassword,
+              labelText: R.string.confirmPassword,
               icon:
                   Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
               errorText: snapshot.data?.description,

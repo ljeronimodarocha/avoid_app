@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helpers/helpers.dart';
-import '../../../helpers/i18n/strings.dart';
+import '../../../helpers/i18n/i18n.dart';
 import '../signup_presenter.dart';
 
 class EmailInput extends StatelessWidget {
@@ -14,7 +14,7 @@ class EmailInput extends StatelessWidget {
         builder: (context, snapshot) {
           return TextFormField(
             decoration: InputDecoration(
-              labelText: S.email,
+              labelText: R.string.email,
               icon:
                   Icon(Icons.email, color: Theme.of(context).primaryColorLight),
               errorText: snapshot.data?.description,

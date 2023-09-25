@@ -5,8 +5,8 @@ import 'package:avoid_app/ui/pages/home/home_presenter.dart';
 import 'package:avoid_app/utils/app_route.dart';
 import 'package:flutter/material.dart';
 
-import '../widges/drawer_app.dart';
-import '../widges/item_video.dart';
+import '../../../widges/drawer_app.dart';
+import 'components/item_video.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool? habilitarMenuOpcoes = false;

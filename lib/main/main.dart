@@ -27,6 +27,7 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       title: "Avoid App",
       debugShowCheckedModeBanner: false,
+      locale: const Locale('pt', 'BR'),
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),

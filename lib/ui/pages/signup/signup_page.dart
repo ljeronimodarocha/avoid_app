@@ -1,9 +1,9 @@
-import 'package:avoid_app/ui/helpers/errors/errors.dart';
+import 'package:avoid_app/ui/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../helpers/i18n/strings.dart';
+import '../../helpers/i18n/i18n.dart';
 import '../components/headline1.dart';
 import '../login/components/error_message.dart';
 import '../login/components/spinner_dialog.dart';
@@ -52,7 +52,7 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Headline1(text: S.addAccount),
+                Headline1(text: R.string.addAccount),
                 Padding(
                   padding: const EdgeInsets.all(32),
                   child: ListenableProvider(
@@ -71,10 +71,13 @@ class SignUpPage extends StatelessWidget {
                             child: PasswordConfirmationInput(),
                           ),
                           SignUpButton(),
-                          ElevatedButton.icon(
-                              onPressed: () => presenter.goToLogin(),
-                              icon: const Icon(Icons.exit_to_app),
-                              label: Text(S.login))
+                          Container(
+                            margin: const EdgeInsets.only(top: 15),
+                            child: ElevatedButton.icon(
+                                onPressed: () => presenter.goToLogin(),
+                                icon: const Icon(Icons.exit_to_app),
+                                label: Text(R.string.login)),
+                          )
                         ],
                       ),
                     ),

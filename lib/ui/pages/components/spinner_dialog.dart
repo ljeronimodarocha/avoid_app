@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/i18n/strings.dart';
+import '../../helpers/i18n/i18n.dart';
 
 void showLoading(BuildContext context) {
   showDialog(
@@ -14,7 +14,7 @@ void showLoading(BuildContext context) {
             children: <Widget>[
               CircularProgressIndicator(),
               SizedBox(height: 10),
-              Text(S.wait, textAlign: TextAlign.center),
+              Text(R.string.wait, textAlign: TextAlign.center),
             ],
           ),
         ],

@@ -1,4 +1,4 @@
-import 'package:avoid_app/views/home_screen.dart';
+import 'package:avoid_app/ui/pages/home/home_page.dart';
 import 'package:flutter/widgets.dart';
 
 import 'home_presenter_factory.dart';

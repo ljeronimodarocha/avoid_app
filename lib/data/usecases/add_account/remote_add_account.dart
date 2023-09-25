@@ -44,7 +44,7 @@ class RemoteAddAccountParams {
           passwordConfirmation: params.passwordConfirmation);
 
   Map toJson() => {
-        'name': name,
+        'username': name,
         'email': email,
         'password': password,
         'passwordConfirmation': passwordConfirmation
