@@ -90,25 +90,25 @@ void main() {
     await loadPage(tester);
 
     final nameTextChildren = find.descendant(
-        of: find.bySemanticsLabel('name'), matching: find.byType(Text));
+        of: find.bySemanticsLabel('Nome'), matching: find.byType(Text));
     expect(nameTextChildren, findsOneWidget,
         reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
 
     final emailTextChildren = find.descendant(
-        of: find.bySemanticsLabel('email'), matching: find.byType(Text));
+        of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
     expect(emailTextChildren, findsOneWidget,
         reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
 
     final passwordTextChildren = find.descendant(
-        of: find.bySemanticsLabel('password'), matching: find.byType(Text));
+        of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
     expect(passwordTextChildren, findsOneWidget,
         reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
 
     final passwordConfirmationTextChildren = find.descendant(
-        of: find.bySemanticsLabel('confirmPassword'),
+        of: find.bySemanticsLabel('Confirmar senha'),
         matching: find.byType(Text));
     expect(passwordConfirmationTextChildren, findsOneWidget,
         reason:
@@ -124,18 +124,18 @@ void main() {
     await loadPage(tester);
 
     final name = faker.person.name();
-    await tester.enterText(find.bySemanticsLabel('name'), name);
+    await tester.enterText(find.bySemanticsLabel('Nome'), name);
     verify(() => presenter.validateName(name));
 
     final email = faker.internet.email();
-    await tester.enterText(find.bySemanticsLabel('email'), email);
+    await tester.enterText(find.bySemanticsLabel('Email'), email);
     verify(() => presenter.validateEmail(email));
 
     final password = faker.internet.password();
-    await tester.enterText(find.bySemanticsLabel('password'), password);
+    await tester.enterText(find.bySemanticsLabel('Senha'), password);
     verify(() => presenter.validatePassword(password));
 
-    await tester.enterText(find.bySemanticsLabel('confirmPassword'), password);
+    await tester.enterText(find.bySemanticsLabel('Confirmar senha'), password);
     verify(() => presenter.validatePasswordConfirmation(password));
   });
 
@@ -149,7 +149,7 @@ void main() {
     await tester.pump();
     expect(
         find.descendant(
-            of: find.bySemanticsLabel('name'), matching: find.byType(Text)),
+            of: find.bySemanticsLabel('Nome'), matching: find.byType(Text)),
         findsOneWidget);
   });
 
@@ -163,7 +163,7 @@ void main() {
     await tester.pump();
     expect(
         find.descendant(
-            of: find.bySemanticsLabel('email'), matching: find.byType(Text)),
+            of: find.bySemanticsLabel('Email'), matching: find.byType(Text)),
         findsOneWidget);
   });
 
@@ -178,7 +178,7 @@ void main() {
     await tester.pump();
     expect(
         find.descendant(
-            of: find.bySemanticsLabel('password'), matching: find.byType(Text)),
+            of: find.bySemanticsLabel('Senha'), matching: find.byType(Text)),
         findsOneWidget);
   });
 
@@ -200,7 +200,7 @@ void main() {
         find.descendant(
             of: find.bySemanticsLabel('Confirmar senha'),
             matching: find.byType(Text)),
-        findsNothing);
+        findsOneWidget);
   });
 
   testWidgets('Should enable button if form is valid',
