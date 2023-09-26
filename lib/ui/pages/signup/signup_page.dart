@@ -17,7 +17,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _hideKeyboard() {
+    void hideKeyboard() {
       final currectFocus = FocusScope.of(context);
       if (!currectFocus.hasPrimaryFocus) {
         currectFocus.unfocus();
@@ -47,7 +47,7 @@ class SignUpPage extends StatelessWidget {
         });
 
         return GestureDetector(
-          onTap: _hideKeyboard,
+          onTap: hideKeyboard,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

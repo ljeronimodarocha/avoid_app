@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 import '../../../widges/drawer_app.dart';
 import 'components/item_video.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final bool? habilitarMenuOpcoes = false;
   final HomePresenter presenter;
 
-  const HomeScreen(habilitarMenuOpcoes, this.presenter);
+  const HomePage(habilitarMenuOpcoes, this.presenter);
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   List<MovieEntity> items = [];
 
